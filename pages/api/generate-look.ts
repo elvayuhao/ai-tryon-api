@@ -33,8 +33,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     res.status(200).json({ output });
-  } catch (error: any) {
-    console.error("Replicate error:", error);
-    res.status(500).json({ error: error.message || "Unknown error" });
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error("Replicate error:", error.message);
+    res.status(500).json({ error: error.message });
+  } else {
+    res.status(500).json({ error: "Unknown error" });
   }
 }
+
